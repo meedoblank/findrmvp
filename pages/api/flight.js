@@ -1,20 +1,41 @@
-// This is a redeploy test
+// pages/api/flight.js
+
 export default async function handler(req, res) {
   const { origin, destination, depart_date } = req.query;
 
-  const token = 'c4a7138fa73e43e8bdb0d28d6d5f529f';
-  const apiUrl = `https://api.travelpayouts.com/v1/prices/direct?origin=${origin}&destination=${destination}&depart_date=${depart_date}&token=${token}`;
+  // MOCK DATA: Bangkok (BKK) → Chiang Mai (CNX)
+  const mockData = {
+    origin,
+    destination,
+    depart_date,
+    currency: "USD",
+    results: [
+      {
+        company: "Thai Airways",
+        mode: "flight",
+        price: 99,
+        departure_time: "2025-08-15T08:30:00",
+        arrival_time: "2025-08-15T10:00:00",
+        duration: "1h 30m"
+      },
+      {
+        company: "AirAsia",
+        mode: "flight",
+        price: 75,
+        departure_time: "2025-08-15T14:00:00",
+        arrival_time: "2025-08-15T15:30:00",
+        duration: "1h 30m"
+      },
+      {
+        company: "Greenbus",
+        mode: "bus",
+        price: 20,
+        departure_time: "2025-08-15T09:00:00",
+        arrival_time: "2025-08-15T18:00:00",
+        duration: "9h 0m"
+      }
+    ]
+  };
 
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: 'Failed to fetch flight data' });
-    }
-
-    return res.status(200).json(data);
-  } catch (error) {
-    return res.status(500).json({ error: 'Proxy server error', details: error.message });
-  }
+  return res.status(200).json(mockData);
 }
