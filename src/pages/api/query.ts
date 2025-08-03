@@ -29,6 +29,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I couldn’t find an answer.';
     return res.status(200).json({ reply });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+} catch (err: any) {
  } catch (err: unknown) {
   console.error('Gemini API Error:', err);
   // extract message if it's an Error, else stringify
