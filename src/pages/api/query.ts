@@ -29,8 +29,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I couldn’t find an answer.';
     return res.status(200).json({ reply });
-  } catch (err: any) {
-    console.error('Gemini API Error:', err);
-    return res.status(500).json({ error: 'Failed to fetch from Gemini API' });
-  }
+ } catch (err: unknown) {
+  console.error('Gemini API Error:', err);
+  // extract message if it's an Error, else stringify
+  const msg =
+    err instanceof Error
+      ? err.message
+      : typeof err === 'string'
+      ? err
+      : JSON.stringify(err);
+  return res.status(500).json({ error: 'Failed to fetch from Gemini API', details: msg });
+}
+
 }
